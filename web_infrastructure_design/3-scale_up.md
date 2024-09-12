@@ -35,26 +35,26 @@ These changes focus on increasing the **resilience**, **scalability**, and **per
 # Issues with this Infrastructure
 
 ## Single Point of Failure in Backend Servers:
-    While the system has two HAProxy load balancers (inferred from your note), there are no redundancy mechanisms for the backend servers (Nginx, application server, database).
-    - **Impact**: If the application server or the database server goes down, the entire application could become unavailable, even though the load balancers are functional.
-    - **Solution**: Implement redundant web servers, application servers, and database servers in active-passive or active-active configurations. This will ensure high availability and failover support.
+While the system has two HAProxy load balancers (inferred from your note), there are no redundancy mechanisms for the backend servers (Nginx, application server, database).
+- **Impact**: If the application server or the database server goes down, the entire application could become unavailable, even though the load balancers are functional.
+- **Solution**: Implement redundant web servers, application servers, and database servers in active-passive or active-active configurations. This will ensure high availability and failover support.
 
 ## No Database Redundancy:
-    The current infrastructure has one MySQL database server, which creates a bottleneck and a single point of failure for data storage.
-    - **Impact**: If the database server fails, the entire application will lose access to its data, leading to downtime.
-    - **Solution**: Add a MySQL replication setup (master-slave or master-master) to ensure data redundancy and allow failover in case of a primary database failure.
+The current infrastructure has one MySQL database server, which creates a bottleneck and a single point of failure for data storage.
+- **Impact**: If the database server fails, the entire application will lose access to its data, leading to downtime.
+- **Solution**: Add a MySQL replication setup (master-slave or master-master) to ensure data redundancy and allow failover in case of a primary database failure.
 
 ## Potential Application Server Bottleneck:
-    The application server in the current design is centralized. As the load increases, it may not be able to handle all incoming requests efficiently.
-    - **Impact**: High traffic or resource-intensive tasks may slow down the server, leading to performance degradation.
-    - **Solution**: Horizontal scaling of the application server by adding more instances behind the load balancer. The load balancer can distribute traffic across multiple application servers to ensure better performance.
+The application server in the current design is centralized. As the load increases, it may not be able to handle all incoming requests efficiently.
+- **Impact**: High traffic or resource-intensive tasks may slow down the server, leading to performance degradation.
+- **Solution**: Horizontal scaling of the application server by adding more instances behind the load balancer. The load balancer can distribute traffic across multiple application servers to ensure better performance.
 
 ## Lack of Web Server Redundancy:
-    There is only one Nginx web server, which processes all incoming HTTP requests.
-    - **Impact**: If the web server fails, the application becomes unreachable, causing downtime for the users.
-    - **Solution**: Implement a cluster of web servers (multiple Nginx instances) so that the HAProxy load balancer can distribute the load across them, ensuring high availability.
+There is only one Nginx web server, which processes all incoming HTTP requests.
+- **Impact**: If the web server fails, the application becomes unreachable, causing downtime for the users.
+- **Solution**: Implement a cluster of web servers (multiple Nginx instances) so that the HAProxy load balancer can distribute the load across them, ensuring high availability.
 
 ## Increased Complexity with SSL Management:
-    SSL/TLS termination is not clearly outlined in the diagram. It's unclear whether the SSL termination is done at HAProxy or at the individual backend servers.
-    - **Impact**: If SSL is terminated at multiple points, it increases management complexity and security risks.
-    - **Solution**: Ideally, SSL termination should be handled at the HAProxy layer to offload this responsibility from the backend servers, simplifying the architecture and improving performance.
+SSL/TLS termination is not clearly outlined in the diagram. It's unclear whether the SSL termination is done at HAProxy or at the individual backend servers.
+- **Impact**: If SSL is terminated at multiple points, it increases management complexity and security risks.
+- **Solution**: Ideally, SSL termination should be handled at the HAProxy layer to offload this responsibility from the backend servers, simplifying the architecture and improving performance.
