@@ -1,6 +1,8 @@
-# Explanation of the Infrastructure
+# SIMPLE WEB STACK
 
 ![Simple web stack](0-simple_web_stack.png)
+
+# Explanation of the Infrastructure
 
 ## 1. What is a server?
 A **server** is a machine (physical or virtual) that hosts applications, databases, or web services and responds to user requests over a network. It plays a key role in managing resources and data, processing requests sent by users.
